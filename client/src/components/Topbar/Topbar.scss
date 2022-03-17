@@ -89,6 +89,7 @@
     right: -5px;
 
     background-color: red;
+    border: none;
     border-radius: 50%;
     font-size: 12px;
   }
@@ -99,5 +100,6 @@
 
     border-radius: 50%;
     object-fit: cover;
+    cursor: pointer;
   }
 }
