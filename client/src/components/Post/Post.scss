@@ -1,0 +1,89 @@
+.post {
+  width: 100%;
+  margin-top: 20px;
+
+  border-radius: 10px;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+
+  &__wrapper {
+    padding: 12px 16px 10px;
+  }
+
+  &__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    &__left {
+      display: flex;
+      align-items: center;
+    }
+
+    &__right__icon {
+      font-size: 20px;
+      color: #1c1e21;
+      cursor: pointer;
+    }
+  }
+
+  &__profileImg {
+    width: 40px;
+    height: 40px;
+    margin-right: 8px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+  &__author {
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  &__date {
+    font-size: 12px;
+    color: #65676b;
+  }
+
+  &__center {
+    width: 100%;
+    margin: 10px 0;
+  }
+
+  &__img {
+    margin-top: 10px;
+    width: 100%;
+    max-height: 500px;
+    object-fit: contain;
+    border-radius: 2.5px;
+  }
+
+  &__bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    &__left {
+      display: flex;
+      align-items: center;
+    }
+  }
+
+  &__reaction {
+    width: 24px;
+    height: 24px;
+    margin-right: 2.5px;
+    cursor: pointer;
+  }
+
+  &__countReaction {
+    margin-left: 2.5px;
+    font-size: 15px;
+    color: #65676b;
+  }
+
+  &__countComment {
+    font-size: 15px;
+    color: #65676b;
+    cursor: pointer;
+  }
+}

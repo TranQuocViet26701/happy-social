@@ -10,6 +10,7 @@ import {
   MdEvent,
   MdSchool,
 } from 'react-icons/md'
+import { IoIosArrowDown } from 'react-icons/io'
 
 export default function Sidebar() {
   return (
@@ -53,7 +54,7 @@ export default function Sidebar() {
             <span className='sidebar__item__text'>Courses</span>
           </li>
         </ul>
-        <button className='sidebar__button'>Show more</button>
+        <button className='sidebar__button'>See more</button>
         <hr className='sidebar__hr' />
         <ul className='sidebar__friendlist'>
           <li className='sidebar__friend'>
