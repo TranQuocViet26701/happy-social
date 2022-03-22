@@ -1,0 +1,20 @@
+.close-friend {
+  display: flex;
+  align-items: center;
+  padding: 8px;
+  cursor: pointer;
+
+  &__img {
+    width: 32px;
+    height: 32px;
+    margin-right: 10px;
+
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+  &__text {
+    font-size: 15px;
+    font-weight: 500;
+  }
+}

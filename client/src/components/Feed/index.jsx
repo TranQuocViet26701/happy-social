@@ -1,3 +1,4 @@
+import { Posts } from '../../data/dummyData'
 import Post from '../Post'
 import Share from '../Share'
 import './Feed.scss'
@@ -7,11 +8,9 @@ export default function Feed() {
     <div className='feed'>
       <div className='feed__wrapper'>
         <Share />
-        <Post />
-        <Post />
-        <Post />
-        <Post />
-        <Post />
+        {Posts.map((post) => (
+          <Post key={post.id} post={post} />
+        ))}
       </div>
     </div>
   )

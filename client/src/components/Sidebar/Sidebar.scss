@@ -1,7 +1,14 @@
 .sidebar {
   flex: 3;
-  height: calc(100vh - 50px);
-  overflow-y: scroll;
+  position: relative;
+
+  &__container {
+    position: sticky;
+    top: 50px;
+    left: 0;
+    height: calc(100vh - 50px);
+    overflow-y: scroll;
+  }
 
   &__wrapper {
     padding: 20px;
@@ -47,33 +54,30 @@
     font-size: 16px;
     list-style: none;
   }
-
-  &__friend {
-    display: flex;
-    align-items: center;
-    padding: 8px;
-    cursor: pointer;
-  }
-
-  &__img {
-    width: 32px;
-    height: 32px;
-    margin-right: 10px;
-
-    border-radius: 50%;
-    object-fit: cover;
-  }
 }
 
-::-webkit-scrollbar {
-  width: 7.5px;
+div.sidebar__container::-webkit-scrollbar {
+  width: 12px;
 }
 
-::-webkit-scrollbar-track {
+div.sidebar__container::-webkit-scrollbar-track {
+  display: none;
   background-color: #f1f1f1;
 }
 
-::-webkit-scrollbar-thumb {
+div.sidebar__container::-webkit-scrollbar-thumb {
+  display: none;
   background-color: #ced0d4;
   border-radius: 5px;
+  border-left: 2px solid transparent;
+  border-right: 2px solid transparent;
+  background-clip: content-box;
+}
+
+.sidebar:hover > div.sidebar__container::-webkit-scrollbar-thumb {
+  display: block;
+}
+
+.sidebar:hover > div.sidebar__container::-webkit-scrollbar-track {
+  display: block;
 }
