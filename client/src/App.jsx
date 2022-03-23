@@ -1,11 +1,7 @@
-import Home from './pages/Home'
+import { LoginPage } from './pages'
 
 function App() {
-  return (
-    <div>
-      <Home />
-    </div>
-  )
+  return <LoginPage />
 }
 
 export default App

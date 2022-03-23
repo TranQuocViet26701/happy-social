@@ -2,9 +2,9 @@ import Feed from '../../components/Feed'
 import Rightbar from '../../components/Rightbar'
 import Sidebar from '../../components/Sidebar'
 import Topbar from '../../components/Topbar'
-import './Home.scss'
+import './HomePage.scss'
 
-function Home() {
+function HomePage() {
   return (
     <>
       <Topbar />
@@ -17,4 +17,4 @@ function Home() {
   )
 }
 
-export default Home
+export default HomePage
