@@ -1,7 +1,4 @@
-import Feed from '../../components/Feed'
-import Rightbar from '../../components/Rightbar'
-import Sidebar from '../../components/Sidebar'
-import Topbar from '../../components/Topbar'
+import { Feed, Rightbar, Sidebar, Topbar } from '../../components'
 import './HomePage.scss'
 
 function HomePage() {

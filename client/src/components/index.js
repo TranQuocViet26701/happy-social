@@ -1,0 +1,8 @@
+export { default as CloseFriend } from './CloseFriend'
+export { default as Feed } from './Feed'
+export { default as OnlineFriend } from './OnlineFriend'
+export { default as Post } from './Post'
+export { default as Rightbar } from './Rightbar'
+export { default as Share } from './Share'
+export { default as Sidebar } from './Sidebar'
+export { default as Topbar } from './Topbar'
