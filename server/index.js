@@ -4,6 +4,7 @@ const morgan = require('morgan')
 const mongoose = require('mongoose')
 const helmet = require('helmet')
 const dotenv = require('dotenv')
+const cors = require('cors')
 const userRoute = require('./routes/users')
 const authRoute = require('./routes/auth')
 const postRoute = require('./routes/posts')
@@ -18,6 +19,7 @@ mongoose.connection.on('error', (err) => {
 })
 
 //middleware
+app.use(cors())
 app.use(express.json())
 app.use(helmet())
 app.use(morgan('common'))

@@ -2,12 +2,12 @@ import OnlineFriend from '../OnlineFriend'
 import './Rightbar.scss'
 import { Users } from '../../data/dummyData'
 
-export default function Rightbar() {
+export default function Rightbar({ user }) {
   const HomeRightbar = () => {
     return (
       <>
         <div className='birthday__container'>
-          <img src='assets/gift.png' alt='' className='birthday__img' />
+          <img src='/assets/gift.png' alt='' className='birthday__img' />
           <span className='birthday__text'>
             <span className='birthday__text--bold'>Le Huyen Tran</span> and{' '}
             <span className='birthday__text--bold'>2 other friends</span> have a
@@ -17,13 +17,13 @@ export default function Rightbar() {
         <hr className='rightbar__hr' />
         <div className='rightbar__ad'>
           <h1 className='rightbar__ad__title'>Sponsored</h1>
-          <img src='assets/ad.png' alt='' className='rightbar__ad__img' />
+          <img src='/assets/ad.png' alt='' className='rightbar__ad__img' />
         </div>
         <hr className='rightbar__hr' />
         <h1 className='rightbar__title'>Online friends</h1>
         <ul className='rightbar__friend-list'>
           {Users.map((user) => (
-            <OnlineFriend friend={user} />
+            <OnlineFriend key={user.id} friend={user} />
           ))}
         </ul>{' '}
       </>
@@ -37,15 +37,21 @@ export default function Rightbar() {
         <div className='rightbar__info'>
           <div className='rightbar__info__item'>
             <span className='rightbar__info--key'>City:</span>
-            <span className='rightbar__info--value'>TP. Ho Chi Minh</span>
+            <span className='rightbar__info--value'>{user.city}</span>
           </div>
           <div className='rightbar__info__item'>
             <span className='rightbar__info--key'>From:</span>
-            <span className='rightbar__info--value'>Viet Nam</span>
+            <span className='rightbar__info--value'>{user.from}</span>
           </div>
           <div className='rightbar__info__item'>
             <span className='rightbar__info--key'>Relationship:</span>
-            <span className='rightbar__info--value'>In a relationship</span>
+            <span className='rightbar__info--value'>
+              {user.relationship === 1
+                ? 'Single'
+                : user.relationship === 2
+                ? 'Married'
+                : 'In a relationship'}
+            </span>
           </div>
         </div>
         <h1 className='rightbar__title'>Your friends</h1>
@@ -109,7 +115,7 @@ export default function Rightbar() {
     <div className='rightbar'>
       <div className='rightbar__container'>
         <div className='rightbar__wrapper'>
-          <ProfileRightbar />
+          {user ? <ProfileRightbar /> : <HomeRightbar />}
         </div>
       </div>
     </div>

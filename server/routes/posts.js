@@ -2,11 +2,19 @@ const express = require('express')
 const router = express.Router()
 const Post = require('../models/Post')
 const User = require('../models/User')
+const multer = require('multer')
+const { storage } = require('../cloudinary')
+
+const parser = multer({ storage })
 
 // create a post
-router.post('/', async (req, res) => {
+router.post('/', parser.array('image'), async (req, res) => {
   try {
     const post = new Post(req.body)
+    post.images = req.files.map((file) => ({
+      url: file.path,
+      filename: file.filename,
+    }))
     await post.save()
     res.status(200).json(post)
   } catch (err) {
@@ -87,6 +95,21 @@ router.get('/timeline/:id', async (req, res) => {
         )
       )
       res.status(200).json(userPosts.concat(...friendPosts))
+    } else {
+      res.status(404).json('user not found')
+    }
+  } catch (err) {
+    res.status(500).json(err)
+  }
+})
+
+// get user's all posts
+router.get('/profile/:username', async (req, res) => {
+  try {
+    const user = await User.findOne({ username: req.params.username })
+    if (user) {
+      const posts = await Post.find({ userId: user._id })
+      res.status(200).json(posts)
     } else {
       res.status(404).json('user not found')
     }

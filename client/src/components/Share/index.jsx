@@ -2,29 +2,69 @@ import { BsEmojiLaughing } from 'react-icons/bs'
 import { MdPhotoLibrary, MdLocationOn } from 'react-icons/md'
 import { FaUserTag } from 'react-icons/fa'
 import './Share.scss'
+import { useContext, useRef, useState } from 'react'
+import { AuthContext } from '../../context/AuthContext'
+import axiosClient from '../../api/axiosClient'
 
 export default function Share() {
+  const { user } = useContext(AuthContext)
+  const description = useRef()
+
+  const [files, setFiles] = useState(null)
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+
+    const formData = new FormData()
+
+    for (let i = 0; i < files.length; i++) {
+      formData.append('image', files[i])
+    }
+
+    formData.append('userId', user._id)
+    formData.append('description', description.current.value)
+
+    try {
+      await axiosClient.post('/posts', formData)
+      window.location.reload()
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
   return (
     <div className='share'>
-      <div className='share__wrapper'>
+      <form className='share__wrapper' onSubmit={handleSubmit}>
         <div className='share__top'>
           <img
-            src='https://2sao.vietnamnetjsc.vn/images/2021/11/24/17/15/lisa.jpg'
+            src={user.profilePicture || '/assets/noAvatar.png'}
             alt=''
             className='share__profileImg'
           />
-          <input placeholder="What's on your mind?" className='share__input' />
+          <input
+            placeholder={`What's on your mind, ${user.username}?`}
+            className='share__input'
+            ref={description}
+          />
         </div>
         <hr className='share__hr' />
         <div className='share__bottom'>
           <div className='share__options'>
-            <div className='share__option'>
+            <label htmlFor='file' className='share__option'>
               <MdPhotoLibrary
                 style={{ color: 'rgb(69, 189, 98)' }}
                 className='share__option__icon'
               />
               <span className='share__option__text'>Photo/Video</span>
-            </div>
+              <input
+                style={{ display: 'none' }}
+                type='file'
+                id='file'
+                multiple
+                accept='.png, .jpg, .jpge'
+                onChange={(e) => setFiles(e.target.files)}
+              />
+            </label>
             <div className='share__option'>
               <BsEmojiLaughing
                 style={{ color: 'rgb(247, 185, 40)' }}
@@ -47,9 +87,11 @@ export default function Share() {
               <span className='share__option__text'>Check in</span>
             </div>
           </div>
-          <button className='share__button'>Post</button>
+          <button className='share__button' type='submit'>
+            Post
+          </button>
         </div>
-      </div>
+      </form>
     </div>
   )
 }

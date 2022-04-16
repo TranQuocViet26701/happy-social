@@ -1,11 +1,18 @@
+import { useContext } from 'react'
+import { MdChat, MdNotifications, MdPerson, MdSearch } from 'react-icons/md'
+import { Link } from 'react-router-dom'
+import { AuthContext } from '../../context/AuthContext'
 import './Topbar.scss'
-import { MdSearch, MdPerson, MdNotifications, MdChat } from 'react-icons/md'
 
 export default function Topbar() {
+  const { user } = useContext(AuthContext)
+
   return (
     <div className='topbar__container'>
       <div className='topbar__left'>
-        <span className='logo'>HappySocial</span>
+        <Link to='/'>
+          <span className='logo'>HappySocial</span>
+        </Link>
       </div>
       <div className='topbar__center'>
         <div className='search__bar'>
@@ -35,11 +42,13 @@ export default function Topbar() {
             <span className='topbar__icon__badge'>3</span>
           </div>
         </div>
-        <img
-          src='https://2sao.vietnamnetjsc.vn/images/2021/11/24/17/15/lisa.jpg'
-          alt=''
-          className='topbar__img'
-        />
+        <Link to={`/profile/${user.username}`}>
+          <img
+            src={user.profilePicture || '/assets/noAvatar.png'}
+            alt=''
+            className='topbar__img'
+          />
+        </Link>
       </div>
     </div>
   )

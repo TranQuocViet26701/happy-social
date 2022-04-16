@@ -1,6 +1,23 @@
+import { useContext, useRef } from 'react'
+import { login } from '../../api/Auth'
+import { AuthContext } from '../../context/AuthContext'
 import './LoginPage.scss'
 
 export default function LoginPage() {
+  const email = useRef()
+  const password = useRef()
+
+  const { user, isFetching, error, dispatch } = useContext(AuthContext)
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
+
+    login(
+      { email: email.current.value, password: password.current.value },
+      dispatch
+    )
+  }
+
   return (
     <div className='login'>
       <div className='login__container'>
@@ -11,22 +28,31 @@ export default function LoginPage() {
           </span>
         </div>
         <div className='login__right'>
-          <div className='login__form'>
+          <form className='login__form' onSubmit={handleSubmit}>
             <input
-              type='text'
+              type='email'
+              required
               className='login__input'
               placeholder='Email address or your phone number'
+              ref={email}
             />
             <input
-              type='text'
+              type='password'
+              required
               className='login__input'
               placeholder='Password'
+              minLength={6}
+              ref={password}
             />
-            <button className='login__btn'>Log In</button>
+            <button className='login__btn' disabled={isFetching}>
+              {isFetching ? 'Loading...' : 'Log In'}
+            </button>
             <span className='login__forget-password'>Forgotten password?</span>
             <hr className='login__hr' />
-            <button className='login__btn--green'>Create New Account</button>
-          </div>
+            <button className='login__btn--green' disabled={isFetching}>
+              {isFetching ? 'Loading...' : 'Create New Account'}
+            </button>
+          </form>
         </div>
       </div>
     </div>

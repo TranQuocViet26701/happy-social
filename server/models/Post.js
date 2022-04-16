@@ -1,6 +1,11 @@
 const mongoose = require('mongoose')
 const { Schema } = mongoose
 
+const ImageUrl = new Schema({
+  url: String,
+  filename: String,
+})
+
 const postSchema = new Schema(
   {
     userId: {
@@ -11,8 +16,8 @@ const postSchema = new Schema(
       type: String,
       max: 500,
     },
-    img: {
-      type: Array,
+    images: {
+      type: [ImageUrl],
       default: [],
     },
     likes: {
