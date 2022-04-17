@@ -10,7 +10,7 @@ export default function Share() {
   const { user } = useContext(AuthContext)
   const description = useRef()
 
-  const [files, setFiles] = useState(null)
+  const [files, setFiles] = useState({})
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -48,6 +48,21 @@ export default function Share() {
           />
         </div>
         <hr className='share__hr' />
+        {Object.values(files).length > 0 && (
+          <div className='share__center'>
+            {Object.values(files).map((image, index) => (
+              <div key={index} className='share__image'>
+                <img alt='' src={URL.createObjectURL(image)} />
+              </div>
+            ))}
+            <button
+              className='share__image__cancel'
+              onClick={() => setFiles({})}
+            >
+              Cancel
+            </button>
+          </div>
+        )}
         <div className='share__bottom'>
           <div className='share__options'>
             <label htmlFor='file' className='share__option'>

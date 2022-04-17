@@ -8,6 +8,7 @@ export const AuthReducer = (state, action) => {
       }
 
     case 'LOGIN_SUCCESS':
+      localStorage.setItem('currentUser', JSON.stringify(action.payload))
       return {
         user: action.payload,
         isFetching: false,
@@ -19,6 +20,28 @@ export const AuthReducer = (state, action) => {
         user: null,
         isFetching: false,
         error: action.payload,
+      }
+
+    case 'FOLLOW':
+      console.log('follow')
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          followings: [...state.user.followings, action.payload],
+        },
+      }
+
+    case 'UNFOLLOW':
+      console.log('unfollow')
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          followings: state.user.followings.filter(
+            (id) => id !== action.payload
+          ),
+        },
       }
 
     default:

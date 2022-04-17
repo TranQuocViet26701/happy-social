@@ -13,12 +13,12 @@ function App() {
   return (
     <Router>
       <Switch>
-        <Route exact path='/' component={user ? HomePage : LoginPage} />
+        <Route exact path='/' component={user && user._id ? HomePage : LoginPage} />
         <Route exact path='/login'>
-          {user ? <Redirect to='/' /> : <LoginPage />}
+          {user && user._id ? <Redirect to='/' /> : <LoginPage />}
         </Route>
         <Route exact path='/register'>
-          {user ? <Redirect to='/' /> : <RegisterPage />}
+          {user && user._id ? <Redirect to='/' /> : <RegisterPage />}
         </Route>
         <Route exact path='/profile/:username' component={ProfilePage} />
       </Switch>
