@@ -1,0 +1,76 @@
+.chatonline {
+  position: relative;
+
+  &__container {
+    position: sticky;
+    height: calc(100vh - 100px);
+    overflow-y: scroll;
+  }
+
+  &__friend {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    margin-top: 10px;
+  }
+
+  &__friend:hover {
+    background-color: #eee;
+    border-radius: 5px;
+  }
+
+  &__image {
+    display: inline-block;
+    position: relative;
+    margin-right: 10px;
+    height: 48px;
+    width: 48px;
+
+    & img {
+      height: 100%;
+      width: 100%;
+
+      border-radius: 100%;
+      box-shadow: rgba(0, 0, 0, 0.02) 0px 0.5px 0.5px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 0.5px;
+      object-fit: cover;
+    }
+  }
+
+  &__image::after {
+    content: "";
+    width: 12px;
+    height: 12px;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    background-color: limegreen;
+    border: 2px solid white;
+    border-radius: 100%;
+  }
+}
+
+div.chatonline__container::-webkit-scrollbar {
+  width: 12px;
+}
+
+div.chatonline__container::-webkit-scrollbar-track {
+  display: none;
+  background-color: #f1f1f1;
+}
+
+div.chatonline__container::-webkit-scrollbar-thumb {
+  display: none;
+  background-color: #ced0d4;
+  border-radius: 5px;
+  border-left: 2px solid transparent;
+  border-right: 2px solid transparent;
+  background-clip: content-box;
+}
+
+.chatonline:hover > div.chatonline__container::-webkit-scrollbar-thumb {
+  display: block;
+}
+
+.chatonline:hover > div.chatonline__container::-webkit-scrollbar-track {
+  display: block;
+}
