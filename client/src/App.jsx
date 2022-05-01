@@ -30,7 +30,10 @@ function App() {
         <Route exact path='/register'>
           {user && user._id ? <Redirect to='/' /> : <RegisterPage />}
         </Route>
-        <Route exact path='/messenger'>
+        <Route path='/messenger/:conversationId'>
+          {user && user._id ? <Messenger /> : <LoginPage />}
+        </Route>
+        <Route path='/messenger'>
           {user && user._id ? <Messenger /> : <LoginPage />}
         </Route>
         <Route exact path='/profile/:username' component={ProfilePage} />

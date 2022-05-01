@@ -1,13 +1,81 @@
-import React from 'react'
-import { BsTelephoneFill } from 'react-icons/bs'
-import { FaVideo } from 'react-icons/fa'
-import { HiDotsCircleHorizontal } from 'react-icons/hi'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import { IoSend } from 'react-icons/io5'
 import { MdSearch } from 'react-icons/md'
-import { ChatOnline, Conversation, Message, Topbar } from '../../components'
+import { useHistory, useRouteMatch } from 'react-router-dom'
+import axiosClient from '../../api/axiosClient'
+import {
+  ChatOnline,
+  Conversation,
+  Message,
+  MessengerBoxTop,
+  Topbar,
+} from '../../components'
+import { AuthContext } from '../../context/AuthContext'
 import './Messenger.scss'
 
-function Messenger(props) {
+function Messenger() {
+  const { params } = useRouteMatch()
+  const history = useHistory()
+  const { user } = useContext(AuthContext)
+  const [conversations, setConversations] = useState([])
+  const [messages, setMessages] = useState([])
+
+  const newMessage = useRef('')
+  const scrollRef = useRef(null)
+  const currentChat = params?.conversationId || ''
+
+  useEffect(() => {
+    const fetchConversation = async () => {
+      try {
+        const res = await axiosClient.get('/conversations/' + user._id)
+        setConversations(res)
+      } catch (err) {
+        console.log(err)
+      }
+    }
+
+    fetchConversation()
+  }, [user._id])
+
+  useEffect(() => {
+    const fetchMessages = async () => {
+      try {
+        const res = await axiosClient.get('/messages/' + currentChat)
+        setMessages(res)
+      } catch (err) {
+        console.log(err)
+      }
+    }
+
+    if (currentChat) {
+      fetchMessages()
+    }
+  }, [currentChat])
+
+  useEffect(() => {
+    scrollRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' })
+  }, [messages])
+
+  const handleConversationClick = (conversationId) => {
+    history.push('/messenger/' + conversationId)
+  }
+
+  const handleSubmitMessage = async () => {
+    if (!newMessage.current.value) return
+
+    try {
+      const res = await axiosClient.post('/messages', {
+        conversationId: currentChat,
+        sender: user._id,
+        text: newMessage.current.value,
+      })
+
+      setMessages([...messages, res])
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
   return (
     <>
       <Topbar />
@@ -19,70 +87,43 @@ function Messenger(props) {
           </div>
           <div className='conversations'>
             <div className='conversations__container'>
-              <Conversation />
-              <Conversation />
-              <Conversation />
-              <Conversation />
-              <Conversation />
-              <Conversation />
-              <Conversation />
-              <Conversation />
-              <Conversation />
-              <Conversation />
-              <Conversation />
+              {conversations.map((conversation) => (
+                <div
+                  key={conversation._id}
+                  onClick={() => handleConversationClick(conversation._id)}
+                >
+                  <Conversation
+                    conversation={conversation}
+                    currentUser={user}
+                    selected={currentChat === conversation._id}
+                  />
+                </div>
+              ))}
             </div>
           </div>
         </div>
         <div className='messenger__box'>
           <div className='messenger__box__top'>
-            <div className='messenger__box__top__left'>
-              <img src='/assets/noAvatar.png' alt='' />
-              <span>Le Huyen Tran</span>
-            </div>
-            <div className='messenger__box__top__right'>
-              <div className='messenger__box__top__right__icon'>
-                <BsTelephoneFill />
-              </div>
-              <div className='messenger__box__top__right__icon'>
-                <FaVideo />
-              </div>
-              <div className='messenger__box__top__right__icon'>
-                <HiDotsCircleHorizontal />
-              </div>
-            </div>
-            <div className='messenger__box__center'></div>
-            <div className='messenger__box__bottom'></div>
+            {currentChat && (
+              <MessengerBoxTop currentChat={currentChat} currentUser={user} />
+            )}
           </div>
           <div className='messenger__box__center'>
-            <Message />
-            <Message own />
-            <Message />
-            <Message own />
-
-            <Message />
-            <Message own />
-            <Message />
-            <Message own />
-
-            <Message />
-            <Message own />
-            <Message />
-            <Message own />
-
-            <Message />
-            <Message own />
-            <Message />
-            <Message own />
-
-            <Message />
-            <Message own />
-            <Message />
-            <Message own />
+            {messages.map((message) => (
+              <div ref={scrollRef} key={message._id}>
+                <Message message={message} own={message.sender === user._id} />
+              </div>
+            ))}
           </div>
           <div className='messenger__box__bottom'>
-            <textarea name='' id='' placeholder='Aa'></textarea>
+            <textarea
+              name=''
+              id=''
+              placeholder='Aa'
+              ref={newMessage}
+            ></textarea>
             <div className='messenger__box__bottom__icon'>
-              <IoSend />
+              <IoSend onClick={handleSubmitMessage} />
             </div>
           </div>
         </div>

@@ -14,7 +14,7 @@
     &__input {
       width: 95%;
       height: 35px;
-      margin: 10px 10px 0;
+      margin: 10px;
       display: flex;
       align-items: center;
       background-color: #eee;
@@ -101,6 +101,10 @@
     }
 
     &__center {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
       overflow-y: scroll;
     }
 

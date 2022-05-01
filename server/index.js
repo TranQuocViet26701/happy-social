@@ -8,6 +8,8 @@ const cors = require('cors')
 const userRoute = require('./routes/users')
 const authRoute = require('./routes/auth')
 const postRoute = require('./routes/posts')
+const conversationRoute = require('./routes/conversations')
+const messageRoute = require('./routes/messages')
 
 dotenv.config()
 
@@ -27,6 +29,8 @@ app.use(morgan('common'))
 app.use('/api/v1/users', userRoute)
 app.use('/api/v1/auth', authRoute)
 app.use('/api/v1/posts', postRoute)
+app.use('/api/v1/conversations', conversationRoute)
+app.use('/api/v1/messages', messageRoute)
 
 const port = 8800
 app.listen(port, () => {

@@ -33,10 +33,12 @@ export default function Topbar() {
             <MdPerson />
             <span className='topbar__icon__badge'>1</span>
           </div>
-          <div className='topbar__icon__item'>
-            <MdChat />
-            <span className='topbar__icon__badge'>2</span>
-          </div>
+          <Link to='/messenger' style={{ color: 'white' }}>
+            <div className='topbar__icon__item'>
+              <MdChat />
+              <span className='topbar__icon__badge'>2</span>
+            </div>
+          </Link>
           <div className='topbar__icon__item'>
             <MdNotifications />
             <span className='topbar__icon__badge'>3</span>
