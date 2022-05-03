@@ -1,12 +1,13 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
-import { IoSend } from 'react-icons/io5'
 import { MdSearch } from 'react-icons/md'
 import { useHistory, useRouteMatch } from 'react-router-dom'
+import { io } from 'socket.io-client'
 import axiosClient from '../../api/axiosClient'
 import {
   ChatOnline,
   Conversation,
   Message,
+  MessengerBoxBottom,
   MessengerBoxTop,
   Topbar,
 } from '../../components'
@@ -19,10 +20,45 @@ function Messenger() {
   const { user } = useContext(AuthContext)
   const [conversations, setConversations] = useState([])
   const [messages, setMessages] = useState([])
+  const [arrivalMessage, setarrivalMessage] = useState(null)
+  const [onlineUsers, setOnlineUsers] = useState([])
 
-  const newMessage = useRef('')
   const scrollRef = useRef(null)
-  const currentChat = params?.conversationId || ''
+  const socket = useRef()
+  const currentChat =
+    params && params.conversationId
+      ? conversations.find((conv) => conv._id === params.conversationId)
+      : undefined
+
+  useEffect(() => {
+    socket.current = io('ws://localhost:8900')
+    socket.current.on('getMessage', (data) => {
+      if (data.senderId !== user._id) {
+        setarrivalMessage({
+          _id: data._id,
+          sender: data.senderId,
+          text: data.text,
+          createdAt: Date.now(),
+        })
+      }
+    })
+  }, [user])
+
+  useEffect(() => {
+    arrivalMessage &&
+      currentChat?.members.includes(arrivalMessage.sender) &&
+      setMessages((prev) => [...prev, arrivalMessage])
+  }, [arrivalMessage, currentChat])
+
+  useEffect(() => {
+    socket.current.emit('addUser', user._id)
+    socket.current.on('getUsers', (users) => {
+      console.log(users)
+      setOnlineUsers(
+        user.followings.filter((f) => users.some((u) => u.userId === f))
+      )
+    })
+  }, [user])
 
   useEffect(() => {
     const fetchConversation = async () => {
@@ -40,17 +76,17 @@ function Messenger() {
   useEffect(() => {
     const fetchMessages = async () => {
       try {
-        const res = await axiosClient.get('/messages/' + currentChat)
+        const res = await axiosClient.get('/messages/' + params.conversationId)
         setMessages(res)
       } catch (err) {
         console.log(err)
       }
     }
 
-    if (currentChat) {
+    if (params.conversationId) {
       fetchMessages()
     }
-  }, [currentChat])
+  }, [params?.conversationId])
 
   useEffect(() => {
     scrollRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' })
@@ -60,17 +96,26 @@ function Messenger() {
     history.push('/messenger/' + conversationId)
   }
 
-  const handleSubmitMessage = async () => {
-    if (!newMessage.current.value) return
+  const handleSubmitMessage = async (newMessage) => {
+    if (!newMessage) return
+
+    const receiverId = currentChat.members.find((mem) => mem !== user._id)
 
     try {
       const res = await axiosClient.post('/messages', {
-        conversationId: currentChat,
+        conversationId: currentChat._id,
         sender: user._id,
-        text: newMessage.current.value,
+        text: newMessage,
       })
 
       setMessages([...messages, res])
+
+      socket.current?.emit('sendMessage', {
+        _id: res._id,
+        senderId: user._id,
+        receiverId,
+        text: newMessage,
+      })
     } catch (err) {
       console.log(err)
     }
@@ -95,7 +140,11 @@ function Messenger() {
                   <Conversation
                     conversation={conversation}
                     currentUser={user}
-                    selected={currentChat === conversation._id}
+                    selected={
+                      params && params.conversationId
+                        ? params.conversationId === conversation._id
+                        : false
+                    }
                   />
                 </div>
               ))}
@@ -103,33 +152,38 @@ function Messenger() {
           </div>
         </div>
         <div className='messenger__box'>
-          <div className='messenger__box__top'>
-            {currentChat && (
-              <MessengerBoxTop currentChat={currentChat} currentUser={user} />
-            )}
-          </div>
-          <div className='messenger__box__center'>
-            {messages.map((message) => (
-              <div ref={scrollRef} key={message._id}>
-                <Message message={message} own={message.sender === user._id} />
+          {currentChat ? (
+            <>
+              <div className='messenger__box__top'>
+                <MessengerBoxTop currentChat={currentChat} currentUser={user} />
               </div>
-            ))}
-          </div>
-          <div className='messenger__box__bottom'>
-            <textarea
-              name=''
-              id=''
-              placeholder='Aa'
-              ref={newMessage}
-            ></textarea>
-            <div className='messenger__box__bottom__icon'>
-              <IoSend onClick={handleSubmitMessage} />
+              <div className='messenger__box__center'>
+                {messages.map((message) => (
+                  <div ref={scrollRef} key={message._id}>
+                    <Message
+                      message={message}
+                      own={message.sender === user._id}
+                    />
+                  </div>
+                ))}
+              </div>
+              <div className='messenger__box__bottom'>
+                <MessengerBoxBottom handleSubmitMessage={handleSubmitMessage} />
+              </div>
+            </>
+          ) : (
+            <div className='messenger__box__empty'>
+              Open a conversation to start a chat.
             </div>
-          </div>
+          )}
         </div>
         <div className='messenger__online'>
           <h4 className='messenger__online__title'>Online Friends</h4>
-          <ChatOnline />
+          <ChatOnline
+            currentUser={user}
+            onlineUsers={onlineUsers}
+            handleConversationClick={handleConversationClick}
+          />
         </div>
       </div>
     </>

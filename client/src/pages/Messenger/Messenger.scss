@@ -141,6 +141,13 @@
         background-color: #eee;
       }
     }
+
+    &__empty {
+      margin: auto;
+      max-width: 80%;
+      color: rgb(99, 96, 96);
+      font-size: 32px;
+    }
   }
 
   &__online {

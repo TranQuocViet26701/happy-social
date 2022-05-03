@@ -12,13 +12,7 @@ function MessengerBoxTop({ currentChat, currentUser }) {
   useEffect(() => {
     const fetchUserFromConversation = async () => {
       try {
-        const conversation = await axiosClient.get('/conversations', {
-          params: {
-            conversationId: currentChat,
-          },
-        })
-
-        const { members } = conversation
+        const { members } = currentChat
         const friendId =
           members[0] === currentUser._id ? members[1] : members[0]
 
@@ -67,7 +61,7 @@ function MessengerBoxTop({ currentChat, currentUser }) {
 }
 
 MessengerBoxTop.propTypes = {
-  currentChat: PropsTypes.string.isRequired,
+  currentChat: PropsTypes.object.isRequired,
   currentUser: PropsTypes.object.isRequired,
 }
 
